@@ -1,51 +1,34 @@
-package controllers
+package models
 
-import (
-	"net/http"
+import "time"
 
-	"foodiego-api/internal/config"
-	"foodiego-api/internal/models"
-
-	"github.com/gin-gonic/gin"
-)
-
-func GetAllRestaurants(c *gin.Context) {
-	var restaurants []models.Restaurant
-	config.DB.Find(&restaurants)
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"data":   restaurants,
-	})
+type Restaurant struct {
+	ID        uint       `json:"id" gorm:"primaryKey;autoIncrement"`
+	Name      string     `json:"name" gorm:"not null"`
+	Category  string     `json:"category" gorm:"not null"`
+	Address   string     `json:"address" gorm:"not null"`
+	ImageURL  string     `json:"image_url"`
+	MenuItems []MenuItem `json:"menu_items,omitempty" gorm:"foreignKey:RestaurantID"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
 }
 
-func GetRestaurantByID(c *gin.Context) {
-	var restaurant models.Restaurant
-	if err := config.DB.First(&restaurant, c.Param("id")).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":  "error",
-			"message": "Restaurant not found.",
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"data":   restaurant,
-	})
+type MenuItem struct {
+	ID           uint      `json:"id" gorm:"primaryKey;autoIncrement"`
+	RestaurantID uint      `json:"restaurant_id" gorm:"not null"`
+	Name         string    `json:"name" gorm:"not null"`
+	Price        float64   `json:"price" gorm:"not null"`
+	Description  string    `json:"description"`
+	ImageURL     string    `json:"image_url"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
-func SearchRestaurants(c *gin.Context) {
-	var restaurants []models.Restaurant
-	q := c.Query("q")
-	if q == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  "error",
-			"message": "Query parameter q is required.",
-		})
-		return
-	}
-	config.DB.Where("name LIKE ? OR category LIKE ?", "%"+q+"%", "%"+q+"%").Find(&restaurants)
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"data":   restaurants,
-	})
+type Order struct {
+	ID         uint      `json:"id" gorm:"primaryKey;autoIncrement"`
+	UserID     uint      `json:"user_id" gorm:"not null"`
+	TotalPrice float64   `json:"total_price" gorm:"not null"`
+	Status     string    `json:"status" gorm:"default:pending"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
