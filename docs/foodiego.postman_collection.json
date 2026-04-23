@@ -1,0 +1,66 @@
+{
+  "info": {
+    "name": "FoodieGo API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/api/v1/auth/register",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Budi Santoso\",\n  \"email\": \"budi@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"081234567890\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/api/v1/auth/login",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"budi@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Restaurants",
+      "item": [
+        {
+          "name": "Get All Restaurants",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/api/v1/restaurants/",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}]
+          }
+        },
+        {
+          "name": "Search Restaurants",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/api/v1/restaurants/search?q=padang",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}]
+          }
+        },
+        {
+          "name": "Get Restaurant By ID",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/api/v1/restaurants/1",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}]
+          }
+        }
+      ]
+    }
+  ]
+}
